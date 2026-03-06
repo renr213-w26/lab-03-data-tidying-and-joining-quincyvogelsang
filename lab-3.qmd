@@ -254,11 +254,25 @@ So on and so forth... Then, in 1-2 sentences, state why you chose these countrie
 Your `countries_of_interest` should consist of no more than five countries. Make sure that the spelling of your countries matches how they appear in the dataset.
 :::
 
+```{r}
+countries_of_interest <-c("Netherlands", "Canada", "Australia", "Japan", "Chile")
+```
+
+I chose the following countries to include one country of each continent.
+
 b\. In a single pipeline, filter your reshaped dataset to include only the `countries_of_interest` from part (a), and save the resulting data frame with a new name so you (1) can refer to this data frame later in your analysis and (2) do not overwrite the data frame you're starting with. Use a short but informative name. Then, in a new pipeline, find the `distinct()` countries in the data frame you created.
 
 ::: callout-tip
 The number of distinct countries in the filtered data frame you created in part (b) should equal the number of countries you chose in part (a). If it doesn't, you might have misspelled a country name or made a mistake in how to filter for these countries. Go back and check your code.
 :::
+
+```{r}
+inflation_subset <- inflation_pivot |>
+  filter(country %in% countries_of_interest)
+
+inflation_subset |>
+  distinct(country)
+```
 
 ### Question 7
 
@@ -275,6 +289,24 @@ Requirements for the plot:
 ::: render-commit-push
 If you haven't yet done so, now is a good time to render, commit, and push. Make sure that you commit and push all changed documents and your Git pane is completely empty before proceeding.
 :::
+
+```{r}
+ggplot(inflation_subset, aes(x = year, y = annual_inflation, color = country, shape = country)) +
+  geom_line()+
+  geom_point()+
+  labs(
+    title = "Annual inflation rates (1993-2021)",
+    subtitle = "Comparison of 5 different countries from 5 continents",
+    x = "Year",
+    y = "Inflation rate (%)",
+    Color = "Country",
+    Shape = "Country"
+  ) +
+  theme_light()
+
+```
+
+All countries have quite similar lines, we see a shootout from Chile before the 2000s. But all are currently quite similar which I would not have expected. Japan is the lowest which seems the most logical for me.
 
 ## Part 2
 
