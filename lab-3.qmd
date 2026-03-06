@@ -129,6 +129,21 @@ Which countries had the top three highest inflation rates in 2021? Your output s
 Column names that are numbers are not considered "proper" in R, therefore to select them you'll need to surround them with backticks, e.g. `select(` `` ` `` `1993` `` ` `` `)`.
 :::
 
+```{r}
+country_inflation |>
+  select(country, `2021`) |>
+  arrange(desc(`2021`)) |>
+  slice_head(n=3)
+```
+
+```{r}
+country_inflation |>
+  filter(country == "United States") |>
+  select(country, `2021`)
+```
+
+Even the lowest of the three highest inflation rates (Brazil) is almost 2x as much. With the highest inflation rate of Argentina being significantly higher than the United states.
+
 ### Question 3
 
 In a single pipeline,
@@ -144,6 +159,14 @@ Which country's inflation change is the largest over this time period? Did infla
 ::: callout-tip
 For this question you'll once again need to use variables whose names are numbers (years) in your pipeline. Make sure to surround the names of such variables with backticks (`` ` ``).
 :::
+
+```{r}
+country_inflation |>
+  mutate(inf_ratio = `2021`/`1993`) |>
+  arrange(desc(inf_ratio)) |>
+  select(country, inf_ratio)
+  
+```
 
 ### Question 4
 
