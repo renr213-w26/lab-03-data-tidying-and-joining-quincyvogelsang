@@ -1,6 +1,7 @@
 ---
 title: "Lab 3 - Data tidying and joining"
 categories: "Lab"
+author: "Quincy Vogelsang"
 ---
 
 # Introduction
@@ -103,11 +104,22 @@ Get to know the data.
 
 a.  `glimpse()` at the `country_inflation` data frame and answer the following questions based on the output. How many rows does `country_inflation` have and what does each row represent? How many columns does `country_inflation` have and what does each column represent?
 
+    ```{r}
+    glimpse(country_inflation)
+    ```
+
+    The dataset country_inflation has 44 rows showing the different countries. There are 30 columns showing the different years.
+
 b.  Display a list of the countries included in the dataset.
 
 ::: callout-tip
 A function that can be useful for part (b) is `pull()`. Check out its documentation for examples of usage.
 :::
+
+```{r}
+country_inflation |>
+  pull(country)
+```
 
 ### Question 2
 
@@ -329,5 +341,3 @@ You can earn up to 4 points on each question:
 -   1: Response shows effort and misses many of the rubric items.
 
 -   0: Response does not show sufficient effort or understanding and/or is largely incomplete.
-
-
