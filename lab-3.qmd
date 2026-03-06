@@ -341,7 +341,19 @@ cpi_divisions <- read_csv("data/cpi-divisions.csv")
 
 a\. How many columns and how many rows does the `us_inflation` dataset have? What are the variables in it? Add a brief (1-2 sentences) narrative summarizing this information.
 
+```{r}
+glimpse(us_inflation)
+```
+
+The data set has 132 rows and 4 columns with the variables country, cpi_division, year and annual_inflation.
+
 b\. How many columns and how many rows does the `cpi_divisions` dataset have? What are the variables in it? Add a brief (1-2 sentences) narrative summarizing this information.
+
+```{r}
+glimpse(cpi_divisions)
+```
+
+The data set has 12 rows and 2 columns with the variables id and description.
 
 c\. Create a new dataset by joining the `us_inflation` dataset with the `cpi_division_id` dataset.
 
@@ -353,6 +365,15 @@ c\. Create a new dataset by joining the `us_inflation` dataset with the `cpi_div
 
 Then, find the number of rows and columns of the resulting dataset and report the names of its columns. Add a brief (1-2 sentences) narrative summarizing this information.
 
+```{r}
+us_inflation_joined <- us_inflation |>
+  left_join(cpi_divisions, by=c("cpi_division_id" = "id"))
+
+glimpse(us_inflation_joined)
+```
+
+The data set now has 132 rows, 5 columns and the variables are country, cpi_division_id, year, annual_inflation and description.
+
 ### Question 9
 
 a\. Create a vector called `divisions_of_interest` which contains the descriptions or IDs of CPI divisions you want to visualize. Your `divisions_of_interest` should consist of no more than five divisions. If you're using descriptions, make sure that the spelling of your divisions matches how they appear in the dataset. Then, in 1-2 sentences, state why you chose these divisions.
@@ -361,7 +382,26 @@ a\. Create a vector called `divisions_of_interest` which contains the descriptio
 Refer back to the guidance provided in [Question 6] if you're not sure how to create this vector.
 :::
 
+```{r}
+us_inflation_joined |>
+  pull(description)
+```
+
+```{r}
+divisions_of_interest <- c("Health", "Transport", "Food and non-Alcoholic beverages", "Education", "Clothing and footwear")
+```
+
+I chose these 5 to get a broad view of different divisions. They represent essential household costs.
+
 b\. In a single pipeline, filter your reshaped dataset to include only the `divisions_of_interest` from part (a), and save the resulting data frame with a new name so you (1) can refer to this data frame later in your analysis and (2) do not overwrite the data frame you're starting with. Use a short but informative name. Then, in a new pipeline, find the `distinct()` divisions in the data frame you created.
+
+```{r}
+us_inflation_subset <- us_inflation_joined |>
+  filter(description %in% divisions_of_interest)
+
+us_inflation_subset |>
+  distinct(description)
+```
 
 ### Question 10
 
@@ -375,13 +415,25 @@ Using your data frame from the previous question, create a plot of annual inflat
 -   If your legend has labels that are too long, you can try moving the legend to the bottom and stack the labels vertically. *Hint:* The `legend.position` and `legend.direction` arguments of the `theme()` functions will be useful.
 
 ```{r}
-ggplot(...) +
-  ... +
+ggplot(us_inflation_subset, aes(x = year, y = annual_inflation, color = description, shape = description)) +
+  geom_point()+
+  geom_line()+
+  labs(
+    title = "US inflation per category (annually)",
+    subtitle = "For selected cpi divisions",
+    x = "Year",
+    y = "Annual inflation rate (%)",
+    color = "CPI division",
+    shape = "CPI division"
+  ) +
+  theme_light()+
   theme(
-    legend.position = "bottom", 
+    legend.position = "right", 
     legend.direction = "vertical"
   )
 ```
+
+We see that transport is the one that differs the most over the different years, with the other categories remaining more stable. We also see a significant jump for some divisions after 2021. Probably due to being in the post-pandemic time frame.
 
 ::: render-commit-push
 If you haven't yet done so since Part 1, now is a good time to render, commit, and push. Make sure that you commit and push all changed documents and your Git pane is completely empty before proceeding.
